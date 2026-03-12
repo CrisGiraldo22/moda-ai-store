@@ -1,15 +1,30 @@
 from fastapi import FastAPI
+from app.api.root.root import router as root_router
+from app.api.v1.routes.health import router as health_router
+from app.api.v1.routes.products import router as products_router
+
+tags_metadata = [
+    {
+        "name": "Root",
+        "description": "API base endpoints"
+    },
+    {
+        "name": "Health",
+        "description": "API status check"
+    },
+    {
+        "name": "Products",
+        "description": "Store product management"
+    }
+]
 
 app = FastAPI(
-    title="fashion AI Store API",
+    title="Moda AI Store API",
     version="0.1.0",
-    description="API for clothing store with Python, React, MySQL e IA"
+    description="API for clothing store with Python, React, MySQL e IA",
+    openapi_tags=tags_metadata
 )
 
-@app.get("/")
-def root():
-    return {"message": "Welcome to Moda AI Store API"}
-
-@app.get("/health")
-def health():
-    return {"status": "ok"}
+app.include_router(root_router)
+app.include_router(health_router)
+app.include_router(products_router)
