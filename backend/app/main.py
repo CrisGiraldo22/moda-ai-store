@@ -1,7 +1,10 @@
 from fastapi import FastAPI
+
 from app.api.root.root import router as root_router
 from app.api.v1.routes.health import router as health_router
 from app.api.v1.routes.products import router as products_router
+from app.db.session import Base, engine
+from app.models.product import Product
 
 tags_metadata = [
     {
@@ -17,6 +20,7 @@ tags_metadata = [
         "description": "Store product management"
     }
 ]
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Moda AI Store API",
