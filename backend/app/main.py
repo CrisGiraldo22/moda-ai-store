@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-
+from fastapi.middleware.cors import CORSMiddleware
 from app.api.root.root import router as root_router
 from app.api.v1.routes.health import router as health_router
 from app.api.v1.routes.products import router as products_router
@@ -28,6 +28,19 @@ app = FastAPI(
     version="0.1.0",
     description="API for a clothing store built with Python, React, MySQL, and AI integration",
     openapi_tags=tags_metadata
+)
+
+origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(root_router)

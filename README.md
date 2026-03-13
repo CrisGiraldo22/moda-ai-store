@@ -1,9 +1,18 @@
 # Moda AI Store
 
-Proyecto de tienda de ropa con:
+A clothing store project built with:
 
-- Backend en Python
-- Frontend en React
-- Base de datos MySQL
-- Integración de IA
-- Control de versiones con Git y GitHub
+- Python
+- FastAPI
+- React
+- MySQL
+- AI integration
+- Git and GitHub
+
+## Project goals
+
+- Build a professional REST API
+- Integrate a React frontend
+- Connect to MySQL
+- Add AI-powered features for product descriptions, recommendations, and search
+- Publish the project on GitHub as a portfolio project
