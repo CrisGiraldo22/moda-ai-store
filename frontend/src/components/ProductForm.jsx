@@ -23,7 +23,7 @@ function ProductForm({ onSubmit, editingProduct, onCancelEdit }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const payload = {
@@ -32,84 +32,99 @@ function ProductForm({ onSubmit, editingProduct, onCancelEdit }) {
       stock: Number(form.stock),
     };
 
-    onSubmit(payload);
+    await onSubmit(payload);
+
+    if (!editingProduct) {
+      setForm(buildFormState(null));
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: "grid", gap: "10px" }}>
-      <h2>{editingProduct ? "Edit Product" : "Create Product"}</h2>
+    <div className="panel">
+      <h2 className="panel-title">
+        {editingProduct ? "Edit Product" : "Create Product"}
+      </h2>
 
-      <input
-        name="name"
-        placeholder="Name"
-        value={form.name}
-        onChange={handleChange}
-        required
-      />
-      <input
-        name="description"
-        placeholder="Description"
-        value={form.description}
-        onChange={handleChange}
-      />
-      <input
-        name="price"
-        type="number"
-        placeholder="Price"
-        value={form.price}
-        onChange={handleChange}
-        required
-      />
-      <input
-        name="stock"
-        type="number"
-        placeholder="Stock"
-        value={form.stock}
-        onChange={handleChange}
-        required
-      />
-      <input
-        name="category"
-        placeholder="Category"
-        value={form.category}
-        onChange={handleChange}
-        required
-      />
-      <input
-        name="size"
-        placeholder="Size"
-        value={form.size}
-        onChange={handleChange}
-      />
-      <input
-        name="color"
-        placeholder="Color"
-        value={form.color}
-        onChange={handleChange}
-      />
-
-      <label>
+      <form onSubmit={handleSubmit} className="form-grid">
         <input
-          name="is_active"
-          type="checkbox"
-          checked={form.is_active}
+          className="form-input"
+          name="name"
+          placeholder="Name"
+          value={form.name}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="form-input"
+          name="description"
+          placeholder="Description"
+          value={form.description}
           onChange={handleChange}
         />
-        Active
-      </label>
+        <input
+          className="form-input"
+          name="price"
+          type="number"
+          placeholder="Price"
+          value={form.price}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="form-input"
+          name="stock"
+          type="number"
+          placeholder="Stock"
+          value={form.stock}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="form-input"
+          name="category"
+          placeholder="Category"
+          value={form.category}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="form-input"
+          name="size"
+          placeholder="Size"
+          value={form.size}
+          onChange={handleChange}
+        />
+        <input
+          className="form-input"
+          name="color"
+          placeholder="Color"
+          value={form.color}
+          onChange={handleChange}
+        />
 
-      <div style={{ display: "flex", gap: "8px" }}>
-        <button type="submit">
-          {editingProduct ? "Update" : "Create"}
-        </button>
+        <label className="checkbox-row">
+          <input
+            name="is_active"
+            type="checkbox"
+            checked={form.is_active}
+            onChange={handleChange}
+          />
+          Active
+        </label>
 
-        {editingProduct && (
-          <button type="button" onClick={onCancelEdit}>
-            Cancel
+        <div className="button-row">
+          <button className="btn btn-primary" type="submit">
+            {editingProduct ? "Update" : "Create"}
           </button>
-        )}
-      </div>
-    </form>
+
+          {editingProduct && (
+            <button className="btn btn-secondary" type="button" onClick={onCancelEdit}>
+              Cancel
+            </button>
+          )}
+        </div>
+      </form>
+    </div>
   );
 }
 

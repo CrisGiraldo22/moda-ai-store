@@ -5,6 +5,11 @@ export const getProducts = async () => {
   return response.data;
 };
 
+export const searchProducts = async (query) => {
+  const response = await api.get(`/products/search?query=${encodeURIComponent(query)}`);
+  return response.data;
+};
+
 export const createProduct = async (product) => {
   const response = await api.post("/products/", product);
   return response.data;
