@@ -7,8 +7,11 @@ import { searchProducts } from "../services/productService";
 function HomePage() {
   const [results, setResults] = useState([]);
   const [message, setMessage] = useState("");
+  const [hasSearched, setHasSearched] = useState(false);
 
   const handleSearch = async (query) => {
+    setHasSearched(true);
+
     if (!query) {
       setResults([]);
       setMessage("Please enter a product id or product name.");
@@ -48,7 +51,7 @@ function HomePage() {
         {message && <p className="search-message">{message}</p>}
       </section>
 
-      <ProductList products={results} showActions={false} />
+      {hasSearched && <ProductList products={results} showActions={false} />}
     </div>
   );
 }
