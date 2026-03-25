@@ -1,10 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from app.api.root.root import router as root_router
+from app.api.v1.routes.auth import router as auth_router
 from app.api.v1.routes.health import router as health_router
 from app.api.v1.routes.products import router as products_router
 from app.db.session import Base, engine
 from app.models.product import Product
+from app.models.user import User
 
 tags_metadata = [
     {
@@ -14,6 +17,10 @@ tags_metadata = [
     {
         "name": "Health",
         "description": "API status and database connectivity checks"
+    },
+    {
+        "name": "Auth",
+        "description": "Authentication and user session management"
     },
     {
         "name": "Products",
@@ -45,4 +52,5 @@ app.add_middleware(
 
 app.include_router(root_router)
 app.include_router(health_router)
+app.include_router(auth_router)
 app.include_router(products_router)

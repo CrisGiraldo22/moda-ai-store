@@ -2,26 +2,29 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
+from app.core.dependencies import require_admin
 from app.db.dependencies import get_db
 from app.models.product import Product
+from app.models.user import User
 from app.schemas.product import ProductCreate, ProductResponse, ProductUpdate
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
-
 @router.post("/", response_model=ProductResponse, status_code=status.HTTP_201_CREATED)
-def create_product(product: ProductCreate, db: Session = Depends(get_db)):
+def create_product(
+    product: ProductCreate,
+    db: Session = Depends(get_db),
+    current_admin: User = Depends(require_admin),
+):
     db_product = Product(**product.model_dump())
     db.add(db_product)
     db.commit()
     db.refresh(db_product)
     return db_product
 
-
 @router.get("/", response_model=list[ProductResponse])
 def list_products(db: Session = Depends(get_db)):
     return db.query(Product).all()
-
 
 @router.get("/search", response_model=list[ProductResponse])
 def search_products(query: str, db: Session = Depends(get_db)):
@@ -30,9 +33,7 @@ def search_products(query: str, db: Session = Depends(get_db)):
     if query.isdigit():
         filters.append(Product.id == int(query))
 
-    products = db.query(Product).filter(or_(*filters)).all()
-    return products
-
+    return db.query(Product).filter(or_(*filters)).all()
 
 @router.get(
     "/{product_id}",
@@ -47,13 +48,17 @@ def get_product(product_id: int, db: Session = Depends(get_db)):
 
     return product
 
-
 @router.put(
     "/{product_id}",
     response_model=ProductResponse,
     responses={404: {"description": "Product not found"}}
 )
-def update_product(product_id: int, product_data: ProductUpdate, db: Session = Depends(get_db)):
+def update_product(
+    product_id: int,
+    product_data: ProductUpdate,
+    db: Session = Depends(get_db),
+    current_admin: User = Depends(require_admin),
+):
     product = db.query(Product).filter(Product.id == product_id).first()
 
     if not product:
@@ -66,13 +71,16 @@ def update_product(product_id: int, product_data: ProductUpdate, db: Session = D
     db.refresh(product)
     return product
 
-
 @router.delete(
     "/{product_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     responses={404: {"description": "Product not found"}}
 )
-def delete_product(product_id: int, db: Session = Depends(get_db)):
+def delete_product(
+    product_id: int,
+    db: Session = Depends(get_db),
+    current_admin: User = Depends(require_admin),
+):
     product = db.query(Product).filter(Product.id == product_id).first()
 
     if not product:
